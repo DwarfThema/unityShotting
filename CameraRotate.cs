@@ -7,7 +7,7 @@ public class CameraRotate : MonoBehaviour
     float rx;
     float ry;
 
-    public float rotSpeed = 200;
+    public float rotSpeed = 500;
 
     // Start is called before the first frame update
     void Start()
