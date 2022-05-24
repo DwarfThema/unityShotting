@@ -44,6 +44,16 @@ public class Gun : MonoBehaviour
                 //   총알자국의 forward 방향과 normal방향과 일치시키고 싶다.
                 bulletImpact.transform.forward = hitInfo.normal;
 
+                //Enemy.cs와 연동
+                //만약 hitInfo가 Enemy컴포넌트를 갖고있다면?
+                Enemy enemy = hitInfo.transform.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    // enemy의 AddDamage함수를 호출하고싶다.
+                    enemy.AddDamage(1);
+
+                }
+
             }
         }
 

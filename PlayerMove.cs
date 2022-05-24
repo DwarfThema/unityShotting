@@ -31,8 +31,9 @@ public class PlayerMove : MonoBehaviour
         float v = Input.GetAxis("Vertical");
 
         Vector3 dir = Vector3.right * h + Vector3.forward * v;
-
         dir.Normalize();
+
+        dir = Camera.main.transform.TransformDirection(dir);
 
         dir.y = yVelocity;
 
