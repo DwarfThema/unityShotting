@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     }
 
     public State state;
+    PlayerHP php;
     GameObject target;
 
     // Start is called before the first frame update
@@ -27,6 +28,9 @@ public class Enemy : MonoBehaviour
         state = State.Idle;
 
         target = GameObject.Find("Player");
+
+        php = target.GetComponent<PlayerHP>();
+        //플레이어를 공격하기 위해 PlayerHP 값을 갖고온다.
     }
 
     // Update is called once per frame
@@ -113,6 +117,18 @@ public class Enemy : MonoBehaviour
             {
                 // 5-2. Move 상태로 전이.
                 state = State.Move;
+            }else
+            {
+                //공격 성공
+                //4. 플레이어를 공격하고
+                php.AddDamage();
+                //target.AddDamage();
+                //HitManager.cs의 Hit함수를 호출하고 싶다.
+                //HitManager hm = GameObject.Find("HitManager").GetComponent<HitManager>();
+                //hm.Hit();
+
+                HitManager.instance.Hit();
+                // HitManager의 this와 instance를 동일시했기에 HitManager를 찾는 방법이 간소화 됐다.
             }
 
         }
