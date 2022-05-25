@@ -9,7 +9,7 @@ public class HitManager : MonoBehaviour
 
 
     public static HitManager instance;
-    // static을 넣으면 처음부터 class에서 static하게 존재하고있는 객체임 (지금은 HitManager것)
+    // static을 넣으면 처음부터 class에서 static하게 존재하고있는 객체임 (지금은 HitManager것) = 싱글톤화 시킨다.
 
     private void Awake()
     //Awake는 Start 보다 더 먼저 실행되는 함수

@@ -2,12 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+//nav mesh agnet 를 사용하기 위해서는 반드시 불러와야함
+
 
 //FSM(finite-state machine:유한상태머신) 으로 상태를 제어하고싶다.
 
 
 public class Enemy : MonoBehaviour
 {
+    NavMeshAgent agent;
+    //NavMeshAgnet 로 agent 선언
+
     public enum State
         //enum은 변수의 콘테이너이다. "열거형"이며 type 도 정해줄수있다.
     {
@@ -25,10 +31,12 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        //agent에 컴포넌트 장착
+
         state = State.Idle;
 
         target = GameObject.Find("Player");
-
         php = target.GetComponent<PlayerHP>();
         //플레이어를 공격하기 위해 PlayerHP 값을 갖고온다.
     }
@@ -63,6 +71,9 @@ public class Enemy : MonoBehaviour
         {
             //3. Move상태로 전이하고싶다.
             state = State.Move;
+
+            agent.destination = target.transform.position;
+
         }
 
     }
@@ -72,14 +83,19 @@ public class Enemy : MonoBehaviour
     private void UpdateMove()
     {
         //target 방향으로 이동하다가 target이 공격거리안에 들어오면 Attack으로 전이하고싶다.
-        //1. target 방향으로 이동하고 싶다.
-        Vector3 dir = target.transform.position - transform.position;
-        // 내쪽 방향으로 오게하고싶으면 target의 위치 - 나의 위치 로 하면된다.
-        dir.Normalize();
-        //방향정규화
 
-        transform.position += dir * speed * Time.deltaTime;
-        //이동속도 설정
+        ////1. target 방향으로 이동하고 싶다. (직진이동)
+        //Vector3 dir = target.transform.position - transform.position;
+        //// 내쪽 방향으로 오게하고싶으면 target의 위치 - 나의 위치 로 하면된다.
+        //dir.Normalize();
+        ////방향정규화
+        //transform.position += dir * speed * Time.deltaTime;
+        ////이동속도 설정
+
+
+        //1. agent 컴포넌트를 이용해서 destination 지정.
+        agent.destination = target.transform.position;
+
 
         //2. 나와 target의 거리를 구해서
         float distance = Vector3.Distance(transform.position, target.transform.position);
@@ -89,6 +105,8 @@ public class Enemy : MonoBehaviour
         {
             //4. Attack상태로 전이하고싶다.
             state = State.Attack;
+            agent.isStopped = true;
+            // 어택 상황이되면 agent가 멈추도록
         }
 
     }
@@ -117,6 +135,8 @@ public class Enemy : MonoBehaviour
             {
                 // 5-2. Move 상태로 전이.
                 state = State.Move;
+                agent.isStopped = false;
+                // 멀어진다면 agnet 스탑
             }else
             {
                 //공격 성공
@@ -138,6 +158,13 @@ public class Enemy : MonoBehaviour
     public void AddDamage(int damage)
     {
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+        //Destroy 가 실행됐을때 일어나는 함수 OnDestroy
+    {
+        EnemyManager.instance.COUNT--;
+        //EnemyManager 의 COUNT property 에서 감소
     }
 
 }
