@@ -9,6 +9,8 @@ public class CameraRotate : MonoBehaviour
 
     public float rotSpeed = 500;
 
+    public Transform body;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,5 +29,7 @@ public class CameraRotate : MonoBehaviour
         rx = Mathf.Clamp(rx, -80, 80);
 
         transform.eulerAngles = new Vector3(-rx, ry, 0);
+
+        body.transform.eulerAngles = new Vector3(0, ry, 0);
     }
 }
